@@ -5,6 +5,8 @@ Daily MNQ levels, news times and a research recap, read by the NinjaTrader
 
 **Latest file:** https://raw.githubusercontent.com/webeasy2431-gif/trading-levels/main/daily/latest.json
 
+**NinjaTrader indicator:** [`ninjatrader/`](ninjatrader/) (install steps in its README).
+
 ## How it updates
 
 1. **Every day at 5:20 PM New York (6:20 PM in summer)**, the GitHub Action
@@ -12,7 +14,7 @@ Daily MNQ levels, news times and a research recap, read by the NinjaTrader
    `daily/latest.json` and `daily/<trading day>.json`. It can also be run by hand from
    the Actions tab ("Daily MNQ levels" -> Run workflow).
 2. **Shortly after**, a daily Claude research run adds the recap, the "why" notes and a
-   news log (`news/`), so the recap is ready before Tokyo opens. *(Not set up yet.)*
+   news log (`news/`), so the recap is ready before Tokyo opens (scheduled task "Daily MNQ recap", 6:45 PM New York).
 
 The trading day runs 6 PM New York to 5 PM New York, so one run covers Asia, London and
 New York.
