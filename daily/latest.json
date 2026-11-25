@@ -2,7 +2,7 @@
   "version": 1,
   "market": "MNQ",
   "priceSource": "Yahoo Finance NQ=F daily bars (CME E-mini Nasdaq-100 futures; MNQ has the same price)",
-  "generatedAt": "2026-11-25T16:15:31-05:00",
+  "generatedAt": "2026-11-25T16:16:31-05:00",
   "session": {
     "tradingDay": "2026-11-25",
     "start": "2026-11-24T18:00:00-05:00",
