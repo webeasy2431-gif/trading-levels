@@ -1,0 +1,36 @@
+name: Daily MNQ levels
+
+on:
+  schedule:
+    # 22:20 UTC = 5:20 PM New York in winter (6:20 PM in summer): after the CME close.
+    # Runs every day so the news calendar stays current over weekends too.
+    - cron: '20 22 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-levels
+  cancel-in-progress: false
+
+jobs:
+  levels:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Calculate levels and news times
+        run: python scripts/daily_levels.py
+      - name: Save to the repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add daily/
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git commit -m "Daily levels $(date -u +%Y-%m-%d)"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push
