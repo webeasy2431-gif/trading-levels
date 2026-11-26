@@ -3,7 +3,7 @@
 Draws on your MNQ chart:
 
 - **Session levels:** previous day high / low / close, Asian range (6 PM New York to 07:00 London, "forming" until then), London open (08:00 London), optional London session range, New York opening range (9:30 to 10:00 New York for index futures, 8:20 to 8:50 for others).
-- **Session VWAP with VARIS-style bands:** inner bands at VWAP +/- 0.5 risk interval, DD bands at +/- 1 risk interval, shaded zone between them. The settings mirror the trader's VARIS V3.0 panel (same groups and defaults: NQ / MNQ 272.5, ES / MES 70.25, GC / MGC 24.1 ...).
+- **Session VWAP with VARIS-style bands:** bands at 1/3, 1/2 and 2/3 of the risk interval and the DD bands at a full risk interval from VWAP, with the zone between 1/2 and 1 shaded. The settings mirror the trader's VARIS V3.0 panel (same groups and defaults: NQ / MNQ 272.5, ES / MES 70.25, GC / MGC 24.1 ...).
 - **Support / resistance** from swing highs and lows (merged when close together, labelled with how many times price turned there), and **trendlines** through the last two higher lows / lower highs (removed once broken).
 - **Daily file** (`daily/latest.json` in this repo, refreshed every 10 minutes): weekly / monthly levels, news times shaded on the chart, and the **recap box** with the day's research, next releases with a countdown and why the key levels matter.
 - **Pasted levels:** type levels from the stream, e.g. `HP 26807.91, MHP 26684.28`.
@@ -34,8 +34,9 @@ Recap, News, Paste). It only draws; it never places or changes orders.
   the daily estimate recalibrates.
 - **5. VARIS - Band visibility -> RI source:** Manual (your numbers), Daily file estimate,
   or Show both (the estimate drawn dashed beside yours).
-- **6. Levels -> Paste levels:** `HP 26807.91, MHP 26684.28` (label then price; commas,
-  semicolons or new lines between them). Prices with thousands commas are fine.
+- **6. Levels -> Paste levels:** `RI 291.75, MHP 26684.28, WHP 26807.91` (label then price; commas,
+  semicolons or new lines between them). Prices with thousands commas are fine. `RI` sets
+  tonight's VARIS risk interval for that chart instead of drawing a line.
 - **8. Daily file:** the URL of the daily file (already set), how often to refresh, news
   shading width, alert distance and sound (a file in NinjaTrader's `sounds` folder).
 - To save your settings as the default, use **Template -> Save** at the bottom of the

@@ -113,7 +113,7 @@ namespace NinjaTrader.NinjaScript.Indicators
 				RiOther = 5; ForceOther = false;
 				VixSymbol = "VX 12-26";
 				VwapAnchor = PslVwapAnchor.SixPmNewYork;
-				ShowInnerBands = true; ShowDdBands = true; ShowZoneShading = true; ShowBandLabels = true;
+				ShowInnerBands = true; ShowDdBands = true; ShowThirdBands = true; ShowZoneShading = true; ShowBandLabels = true;
 				RiSource = PslRiSource.Manual;
 
 				// Levels
@@ -148,6 +148,10 @@ namespace NinjaTrader.NinjaScript.Indicators
 				AddPlot(new Stroke(Brushes.DodgerBlue, 2), PlotStyle.Line, "DD Band lower");
 				AddPlot(new Stroke(Brushes.Gray, DashStyleHelper.Dash, 1), PlotStyle.Line, "DD Band upper (est.)");
 				AddPlot(new Stroke(Brushes.Gray, DashStyleHelper.Dash, 1), PlotStyle.Line, "DD Band lower (est.)");
+				AddPlot(new Stroke(Brushes.CadetBlue, DashStyleHelper.Dot, 1), PlotStyle.Line, "1/3 upper");
+				AddPlot(new Stroke(Brushes.CadetBlue, DashStyleHelper.Dot, 1), PlotStyle.Line, "1/3 lower");
+				AddPlot(new Stroke(Brushes.CadetBlue, DashStyleHelper.Dot, 1), PlotStyle.Line, "2/3 upper");
+				AddPlot(new Stroke(Brushes.CadetBlue, DashStyleHelper.Dot, 1), PlotStyle.Line, "2/3 lower");
 			}
 			else if (State == State.DataLoaded)
 			{
@@ -202,8 +206,11 @@ namespace NinjaTrader.NinjaScript.Indicators
 		#endregion
 
 		#region Risk interval
+		private double pastedRi;   // "RI 291.75" in the paste box overrides the panel value for this chart
+
 		private double ManualRi()
 		{
+			if (pastedRi > 0) return pastedRi;
 			if (ForceOther) return RiOther;
 			string r = Instrument.MasterInstrument.Name.ToUpperInvariant();
 			switch (r)
@@ -235,8 +242,22 @@ namespace NinjaTrader.NinjaScript.Indicators
 		}
 		#endregion
 
+		private string lastPaste;
+
+		private void ReadPastedRi()
+		{
+			if (PasteLevels == lastPaste) return;
+			lastPaste = PasteLevels;
+			pastedRi = 0;
+			if (string.IsNullOrWhiteSpace(PasteLevels)) return;
+			Match m = Regex.Match(PasteLevels, @"(?i)(?:^|[,;\n|])\s*RI\s*[:=]?\s*([0-9][0-9,]*\.?[0-9]*)");
+			double v;
+			if (m.Success && double.TryParse(m.Groups[1].Value.Replace(",", ""), NumberStyles.Float, CultureInfo.InvariantCulture, out v) && v > 0) pastedRi = v;
+		}
+
 		protected override void OnBarUpdate()
 		{
+			ReadPastedRi();
 			if (CurrentBar < 1) return;
 			DateTime ny = ToZone(Time[0], nyTz);
 			DateTime td = TradingDayOf(ny);
@@ -324,6 +345,12 @@ namespace NinjaTrader.NinjaScript.Indicators
 			else { Values[1].Reset(); Values[2].Reset(); Values[3].Reset(); Values[4].Reset(); }
 			if (ShowVarisBands && RiSource == PslRiSource.ShowBoth && est > 0) { Values[5][0] = vwap + est; Values[6][0] = vwap - est; }
 			else { Values[5].Reset(); Values[6].Reset(); }
+			if (ShowVarisBands && ShowThirdBands && ri > 0)
+			{
+				Values[7][0] = vwap + ri / 3.0; Values[8][0] = vwap - ri / 3.0;
+				Values[9][0] = vwap + 2.0 * ri / 3.0; Values[10][0] = vwap - 2.0 * ri / 3.0;
+			}
+			else { Values[7].Reset(); Values[8].Reset(); Values[9].Reset(); Values[10].Reset(); }
 		}
 
 		private void UpdateSwings()
@@ -471,7 +498,8 @@ namespace NinjaTrader.NinjaScript.Indicators
 		private void ApplyPlotVisibility()
 		{
 			if (origPlotBrushes == null) return;
-			bool[] on = new bool[] { ShowVwap, ShowVarisBands && ShowInnerBands, ShowVarisBands && ShowInnerBands, ShowVarisBands && ShowDdBands, ShowVarisBands && ShowDdBands, ShowVarisBands && RiSource == PslRiSource.ShowBoth, ShowVarisBands && RiSource == PslRiSource.ShowBoth };
+			bool third = ShowVarisBands && ShowThirdBands;
+			bool[] on = new bool[] { ShowVwap, ShowVarisBands && ShowInnerBands, ShowVarisBands && ShowInnerBands, ShowVarisBands && ShowDdBands, ShowVarisBands && ShowDdBands, ShowVarisBands && RiSource == PslRiSource.ShowBoth, ShowVarisBands && RiSource == PslRiSource.ShowBoth, third, third, third, third };
 			for (int i = 0; i < Plots.Length && i < on.Length; i++)
 			{
 				Brush want = on[i] ? origPlotBrushes[i] : Brushes.Transparent;
@@ -595,7 +623,7 @@ namespace NinjaTrader.NinjaScript.Indicators
 				var notes = f.Levels.Where(l => !string.IsNullOrWhiteSpace(l.Note)).Take(4).ToList();
 				foreach (Lvl l in notes) sb.AppendLine(string.Format("{0} {1}: {2}", l.Label, Instrument.MasterInstrument.FormatPrice(l.Price), Wrap(l.Note, 60)));
 				double est = FileRi();
-				if (est > 0) sb.AppendLine(string.Format("RI: manual {0} (his, {1}) / est. {2}", ManualRi(), f.RiManualDate ?? "?", est));
+				if (est > 0) sb.AppendLine(string.Format("RI: in use {0}{1} / file: his last {2} ({3}), est. {4}", ManualRi(), pastedRi > 0 ? " (pasted)" : "", f.RiManual, f.RiManualDate ?? "?", est));
 			}
 			Draw.TextFixed(this, "PSL_RECAP", sb.ToString().TrimEnd(), TextPosition.TopLeft, Brushes.White, recapFont, Brushes.Transparent, RecapBackBrush, 70);
 			Track("PSL_RECAP");
@@ -642,6 +670,7 @@ namespace NinjaTrader.NinjaScript.Indicators
 					continue;
 				}
 				string label = parts.Length > 1 ? string.Join(" ", parts.Take(parts.Length - 1)) : "Level";
+				if (label.Equals("RI", StringComparison.OrdinalIgnoreCase)) continue;     // the risk interval, not a level
 				list.Add(new Lvl { Key = "P_" + label, Label = label, Price = price });
 			}
 			return list;
@@ -903,14 +932,15 @@ namespace NinjaTrader.NinjaScript.Indicators
 		[Display(Name = "VIX futures symbol (front month)", Description = "Stored only; not used in any calculation yet.", Order = 1, GroupName = "3. VARIS - Volatility reference")] public string VixSymbol { get; set; }
 		[Display(Name = "VWAP anchor", Order = 1, GroupName = "4. VARIS - Session anchor")] public PslVwapAnchor VwapAnchor { get; set; }
 
-		[Display(Name = "Inner bands (0.5 RI)", Order = 1, GroupName = "5. VARIS - Band visibility")] public bool ShowInnerBands { get; set; }
+		[Display(Name = "Half bands (0.5 RI)", Order = 1, GroupName = "5. VARIS - Band visibility")] public bool ShowInnerBands { get; set; }
 		[Display(Name = "DD bands (1.0 RI)", Order = 2, GroupName = "5. VARIS - Band visibility")] public bool ShowDdBands { get; set; }
-		[Display(Name = "Shaded zone", Order = 3, GroupName = "5. VARIS - Band visibility")] public bool ShowZoneShading { get; set; }
+		[Display(Name = "Shaded zone (0.5 to 1.0 RI)", Order = 3, GroupName = "5. VARIS - Band visibility")] public bool ShowZoneShading { get; set; }
+		[Display(Name = "1/3 and 2/3 bands", Order = 6, GroupName = "5. VARIS - Band visibility")] public bool ShowThirdBands { get; set; }
 		[Display(Name = "Band price labels", Order = 4, GroupName = "5. VARIS - Band visibility")] public bool ShowBandLabels { get; set; }
 		[Display(Name = "RI source", Description = "Manual = your numbers. Daily file estimate = calibrated estimate from the daily file (NQ / MNQ). Show both = estimate drawn dashed beside yours.", Order = 5, GroupName = "5. VARIS - Band visibility")] public PslRiSource RiSource { get; set; }
 
 		[Display(Name = "New York opening range start", Order = 1, GroupName = "6. Levels")] public PslNyOpen NyOpenTime { get; set; }
-		[Display(Name = "Paste levels", Description = "e.g. HP 26807.91, MHP 26684.28 (label then price; separate with commas, semicolons or new lines)", Order = 2, GroupName = "6. Levels")] public string PasteLevels { get; set; }
+		[Display(Name = "Paste levels", Description = "e.g. RI 291.75, MHP 26684.28, WHP 26807.91 (label then price; separate with commas, semicolons or new lines). 'RI' sets the VARIS risk interval for this chart instead of drawing a line.", Order = 2, GroupName = "6. Levels")] public string PasteLevels { get; set; }
 
 		[Range(2, 50)][Display(Name = "Swing strength (bars each side)", Order = 1, GroupName = "7. Support / resistance and trendlines")] public int SwingStrength { get; set; }
 		[Range(0, 30)][Display(Name = "Max S/R levels", Order = 2, GroupName = "7. Support / resistance and trendlines")] public int SrMaxLevels { get; set; }
