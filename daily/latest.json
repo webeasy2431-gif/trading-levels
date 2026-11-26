@@ -2,30 +2,30 @@
   "version": 1,
   "market": "MNQ",
   "priceSource": "Yahoo Finance NQ=F daily bars (CME E-mini Nasdaq-100 futures; MNQ has the same price)",
-  "generatedAt": "2026-11-25T16:16:31-05:00",
+  "generatedAt": "2026-11-25T23:10:56-05:00",
   "session": {
-    "tradingDay": "2026-11-25",
-    "start": "2026-11-24T18:00:00-05:00",
-    "end": "2026-11-25T17:00:00-05:00"
+    "tradingDay": "2026-11-26",
+    "start": "2026-11-25T18:00:00-05:00",
+    "end": "2026-11-26T17:00:00-05:00"
   },
   "levels": [
     {
-      "price": 27036.0,
+      "price": 26372.75,
       "label": "PD High",
       "kind": "resistance",
-      "why": "Previous trading day's high (Tue 24 Nov)."
+      "why": "Previous trading day's high (Wed 25 Nov)."
     },
     {
-      "price": 25998.0,
+      "price": 25997.5,
       "label": "PD Low",
       "kind": "support",
-      "why": "Previous trading day's low (Tue 24 Nov)."
+      "why": "Previous trading day's low (Wed 25 Nov)."
     },
     {
-      "price": 26275.75,
+      "price": 26355.75,
       "label": "PD Close",
       "kind": "reference",
-      "why": "Previous trading day's settlement-time close (Tue 24 Nov)."
+      "why": "Previous trading day's settlement-time close (Wed 25 Nov)."
     },
     {
       "price": 28279.25,
@@ -46,7 +46,7 @@
       "why": "High of this week so far."
     },
     {
-      "price": 25426.75,
+      "price": 25027.5,
       "label": "Week Low",
       "kind": "support",
       "why": "Low of this week so far."
@@ -64,78 +64,18 @@
       "why": "Low of October 2026."
     }
   ],
-  "atr14": 1156.45,
+  "atr14": 1052.27,
   "riskInterval": {
     "product": "NQ / MNQ",
     "manual": 272.5,
     "manualDate": "2026-11-24",
-    "estimate": 272.5,
+    "estimate": 273.75,
     "method": "price x stdev(20 daily log returns) x calibration factor",
     "factor": 0.3523,
     "calibratedOn": 1,
     "note": "Estimate, not the trader's number. The manual value is the last one he showed."
   },
   "events": [
-    {
-      "time": "2026-11-24T19:30:00-05:00",
-      "timeNY": "Tue 7:30 PM",
-      "currency": "AUD",
-      "title": "CPI m/m",
-      "impact": "High",
-      "forecast": "0.4%",
-      "previous": "0.8%",
-      "inSession": true
-    },
-    {
-      "time": "2026-11-24T19:30:00-05:00",
-      "timeNY": "Tue 7:30 PM",
-      "currency": "AUD",
-      "title": "CPI y/y",
-      "impact": "High",
-      "forecast": "4.7%",
-      "previous": "4.3%",
-      "inSession": true
-    },
-    {
-      "time": "2026-11-24T19:30:00-05:00",
-      "timeNY": "Tue 7:30 PM",
-      "currency": "AUD",
-      "title": "Trimmed Mean CPI m/m",
-      "impact": "High",
-      "forecast": "0.3%",
-      "previous": "0.3%",
-      "inSession": true
-    },
-    {
-      "time": "2026-11-25T08:30:00-05:00",
-      "timeNY": "Wed 8:30 AM",
-      "currency": "USD",
-      "title": "Core PCE Price Index m/m",
-      "impact": "High",
-      "forecast": "0.3%",
-      "previous": "0.3%",
-      "inSession": true
-    },
-    {
-      "time": "2026-11-25T08:30:00-05:00",
-      "timeNY": "Wed 8:30 AM",
-      "currency": "USD",
-      "title": "Prelim GDP q/q",
-      "impact": "High",
-      "forecast": "3.5%",
-      "previous": "3.4%",
-      "inSession": true
-    },
-    {
-      "time": "2026-11-25T08:30:00-05:00",
-      "timeNY": "Wed 8:30 AM",
-      "currency": "USD",
-      "title": "Prelim GDP Price Index q/q",
-      "impact": "Medium",
-      "forecast": "2.3%",
-      "previous": "2.3%",
-      "inSession": true
-    },
     {
       "time": "2026-11-26T08:00:00-05:00",
       "timeNY": "Thu 8:00 AM",
@@ -144,7 +84,7 @@
       "impact": "Holiday",
       "forecast": null,
       "previous": null,
-      "inSession": false
+      "inSession": true
     }
   ],
   "recap": null,

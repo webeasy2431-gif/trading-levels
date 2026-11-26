@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "market": "MNQ",
+  "priceSource": "Yahoo Finance NQ=F daily bars (CME E-mini Nasdaq-100 futures; MNQ has the same price)",
+  "generatedAt": "2026-11-25T23:10:56-05:00",
+  "session": {
+    "tradingDay": "2026-11-26",
+    "start": "2026-11-25T18:00:00-05:00",
+    "end": "2026-11-26T17:00:00-05:00"
+  },
+  "levels": [
+    {
+      "price": 26372.75,
+      "label": "PD High",
+      "kind": "resistance",
+      "why": "Previous trading day's high (Wed 25 Nov)."
+    },
+    {
+      "price": 25997.5,
+      "label": "PD Low",
+      "kind": "support",
+      "why": "Previous trading day's low (Wed 25 Nov)."
+    },
+    {
+      "price": 26355.75,
+      "label": "PD Close",
+      "kind": "reference",
+      "why": "Previous trading day's settlement-time close (Wed 25 Nov)."
+    },
+    {
+      "price": 28279.25,
+      "label": "Prev Week High",
+      "kind": "resistance",
+      "why": "High of the week of Mon 16 Nov."
+    },
+    {
+      "price": 24976.5,
+      "label": "Prev Week Low",
+      "kind": "support",
+      "why": "Low of the week of Mon 16 Nov."
+    },
+    {
+      "price": 27137.0,
+      "label": "Week High",
+      "kind": "resistance",
+      "why": "High of this week so far."
+    },
+    {
+      "price": 25027.5,
+      "label": "Week Low",
+      "kind": "support",
+      "why": "Low of this week so far."
+    },
+    {
+      "price": 31616.5,
+      "label": "Prev Month High",
+      "kind": "resistance",
+      "why": "High of October 2026."
+    },
+    {
+      "price": 28232.75,
+      "label": "Prev Month Low",
+      "kind": "support",
+      "why": "Low of October 2026."
+    }
+  ],
+  "atr14": 1052.27,
+  "riskInterval": {
+    "product": "NQ / MNQ",
+    "manual": 272.5,
+    "manualDate": "2026-11-24",
+    "estimate": 273.75,
+    "method": "price x stdev(20 daily log returns) x calibration factor",
+    "factor": 0.3523,
+    "calibratedOn": 1,
+    "note": "Estimate, not the trader's number. The manual value is the last one he showed."
+  },
+  "events": [
+    {
+      "time": "2026-11-26T08:00:00-05:00",
+      "timeNY": "Thu 8:00 AM",
+      "currency": "USD",
+      "title": "Bank Holiday",
+      "impact": "Holiday",
+      "forecast": null,
+      "previous": null,
+      "inSession": true
+    }
+  ],
+  "recap": null,
+  "recapNote": "The recap and the 'why' notes are added by the daily Claude research run."
+}
